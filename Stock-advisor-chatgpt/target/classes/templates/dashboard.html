@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard - Stock Advisor</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Stock Advisor</a>
+        <div class="navbar-nav">
+            <span th:text="${'Welcome, ' + user.fullName}" style="margin-right: 20px;"></span>
+            <a href="/logout" class="nav-link">Logout</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1>Dashboard</h1>
+        
+        <div class="card">
+            <div class="card-header">Popular Stocks</div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="stock : ${stocks}">
+                            <td th:text="${stock.symbol}">AAPL</td>
+                            <td th:text="${stock.name}">Apple Inc.</td>
+                            <td th:text="${'$' + #numbers.formatDecimal(stock.price, 1, 2)}">$150.25</td>
+                            <td th:class="${stock.change >= 0 ? 'positive' : 'negative'}" 
+                                th:text="${(stock.change >= 0 ? '+' : '') + #numbers.formatDecimal(stock.change, 1, 2)}"
+                                >+2.30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

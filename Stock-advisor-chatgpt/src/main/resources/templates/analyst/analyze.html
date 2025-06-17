@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Analysis - Stock Advisor</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #3498db;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .page-header {
+            margin-bottom: 25px;
+        }
+        .page-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+        }
+        .page-subtitle {
+            color: #7f8c8d;
+            font-size: 16px;
+            margin: 0;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            padding: 18px 25px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .card-body {
+            padding: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dfe6e9;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        .form-control:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .btn {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .stock-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .stock-btn {
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #dfe6e9;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .stock-btn:hover {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .search-history {
+            margin-top: 15px;
+        }
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.3s;
+        }
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+        .history-symbol {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .history-date {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .history-action {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        .history-action:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="navbar-brand">Stock Advisor</a>
+        <div class="navbar-nav">
+            <a href="/analyst/analyze" class="nav-link">New Analysis</a>
+            <a href="/analyst/investors" class="nav-link">Investors</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">Logout</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">New Stock Analysis</h1>
+            <p class="page-subtitle">Enter a stock symbol to generate a comprehensive analysis</p>
+        </div>
+        
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        
+        <div class="two-column">
+            <div class="card">
+                <div class="card-header">Enter Stock Details</div>
+                <div class="card-body">
+                    <form th:action="@{/analyst/analyze}" method="post">
+                        <div class="form-group">
+                            <label for="symbol">Stock Symbol</label>
+                            <input type="text" id="symbol" name="symbol" class="form-control" th:value="${param.symbol}" placeholder="e.g. AAPL" required>
+                        </div>
+                        <button type="submit" class="btn">Generate Analysis</button>
+                    </form>
+                    
+                    <h4 style="margin-top: 25px; color: #2c3e50;">Popular Stocks</h4>
+                    <div class="stock-buttons">
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='AAPL'">AAPL</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='MSFT'">MSFT</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='GOOGL'">GOOGL</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='AMZN'">AMZN</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='TSLA'">TSLA</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='META'">META</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='NVDA'">NVDA</button>
+                        <button class="stock-btn" onclick="document.getElementById('symbol').value='JPM'">JPM</button>
+                    </div>
+                    
+                    <div class="chart-container">
+                        <canvas id="marketOverviewChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Recent Search History</div>
+                <div class="card-body">
+                    <div class="search-history">
+                        <div class="history-item">
+                            <div class="history-symbol">AAPL</div>
+                            <div class="history-date">2025-06-17 14:30</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='AAPL'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">MSFT</div>
+                            <div class="history-date">2025-06-16 11:45</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='MSFT'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">GOOGL</div>
+                            <div class="history-date">2025-06-15 09:20</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='GOOGL'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">TSLA</div>
+                            <div class="history-date">2025-06-14 16:15</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='TSLA'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">AMZN</div>
+                            <div class="history-date">2025-06-13 10:30</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='AMZN'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">META</div>
+                            <div class="history-date">2025-06-12 13:45</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='META'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">NVDA</div>
+                            <div class="history-date">2025-06-11 15:20</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='NVDA'">Analyze Again</div>
+                        </div>
+                        <div class="history-item">
+                            <div class="history-symbol">JPM</div>
+                            <div class="history-date">2025-06-10 09:15</div>
+                            <div class="history-action" onclick="document.getElementById('symbol').value='JPM'">Analyze Again</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Market overview chart
+        const marketCtx = document.getElementById('marketOverviewChart').getContext('2d');
+        const marketChart = new Chart(marketCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jun 10', 'Jun 11', 'Jun 12', 'Jun 13', 'Jun 14', 'Jun 15', 'Jun 16', 'Jun 17'],
+                datasets: [
+                    {
+                        label: 'AAPL',
+                        data: [170.25, 171.50, 169.75, 172.30, 173.45, 171.20, 174.60, 175.23],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'MSFT',
+                        data: [405.20, 408.35, 410.15, 407.80, 409.25, 411.40, 410.90, 412.67],
+                        borderColor: '#2ecc71',
+                        backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'GOOGL',
+                        data: [175.30, 176.45, 177.20, 176.85, 177.90, 178.15, 177.60, 178.45],
+                        borderColor: '#e74c3c',
+                        backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Popular Stocks Performance'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false
+                    }
+                }
+            }
+        });
+        
+        // Pre-fill symbol from URL parameter if present
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const symbol = urlParams.get('symbol');
+            if (symbol) {
+                document.getElementById('symbol').value = symbol;
+            }
+        });
+    </script>
+</body>
+</html>
