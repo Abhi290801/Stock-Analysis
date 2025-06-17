@@ -176,4 +176,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - All contributors and users
 
 ---
-Made with ❤️ by [Your Name]
+Made with ❤️ by [Abhishek Raj Kashyap]
