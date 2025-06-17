@@ -26,7 +26,10 @@ public class AnalystController {
     private AnalysisService analysisService;
     
     @GetMapping("/analyze")
-    public String analyzeForm() {
+    public String analyzeForm(@RequestParam(required = false) String symbol, Model model) {
+        if (symbol != null && !symbol.isEmpty()) {
+            model.addAttribute("symbol", symbol);
+        }
         return "analyst/analyze";
     }
     
@@ -38,6 +41,8 @@ public class AnalystController {
         try {
             StockAnalysis analysis = analysisService.createAnalysis(symbol, analyst);
             redirectAttributes.addFlashAttribute("success", "Analysis created successfully");
+            redirectAttributes.addFlashAttribute("symbol", symbol);
+            redirectAttributes.addFlashAttribute("stockName", analysisService.getStockName(symbol));
             return "redirect:/analyst/analysis/" + analysis.getId();
         } catch (IOException | InterruptedException e) {
             redirectAttributes.addFlashAttribute("error", "Error creating analysis: " + e.getMessage());
@@ -46,9 +51,17 @@ public class AnalystController {
     }
     
     @GetMapping("/analysis/{id}")
-    public String viewAnalysis(@PathVariable Long id, Model model) {
-        // In a real application, you would fetch the analysis by ID
-        // For now, we'll just return the analysis view
+    public String viewAnalysis(@PathVariable Long id, Model model, 
+                              @ModelAttribute("symbol") String symbol,
+                              @ModelAttribute("stockName") String stockName) {
+        // If we don't have the symbol from flash attributes, use a default
+        if (symbol == null || symbol.isEmpty()) {
+            symbol = "AAPL";
+            stockName = "Apple Inc.";
+        }
+        
+        model.addAttribute("symbol", symbol);
+        model.addAttribute("stockName", stockName);
         return "analyst/analysis";
     }
     

@@ -333,8 +333,8 @@
             <div class="card-body">
                 <div class="stock-header">
                     <div class="stock-info">
-                        <div class="stock-symbol">AAPL</div>
-                        <div class="stock-name">Apple Inc.</div>
+                        <div class="stock-symbol" th:text="${symbol}">AAPL</div>
+                        <div class="stock-name" th:text="${stockName}">Apple Inc.</div>
                         <span class="badge badge-buy">BUY</span>
                     </div>
                     <div>
@@ -437,7 +437,7 @@
                 <h3 class="section-title">AI Analysis</h3>
                 <div class="recommendation">
                     <div class="recommendation-title">Summary</div>
-                    <p>Based on technical analysis of AAPL:</p>
+                    <p>Based on technical analysis of <span th:text="${symbol}">AAPL</span>:</p>
                     <p>The stock appears to be oversold with bullish momentum. RSI at 32.45 indicates potential buying opportunity. The short-term trend is positive with EMA20 above EMA50.</p>
                     <p>The MACD indicator shows positive momentum, and the stock is trading near the lower Bollinger Band, suggesting a potential bounce.</p>
                     <p><strong>Recommendation: BUY - Consider allocating 15% of portfolio.</strong></p>
@@ -446,7 +446,10 @@
         </div>
     </div>
     
-    <script>
+    <script th:inline="javascript">
+        // Get stock symbol from Thymeleaf
+        const stockSymbol = /*[[${symbol}]]*/ 'AAPL';
+        
         // Sample data for charts
         const dates = ['Jun 10', 'Jun 11', 'Jun 12', 'Jun 13', 'Jun 14', 'Jun 15', 'Jun 16', 'Jun 17'];
         const ohlc = [
@@ -469,7 +472,7 @@
         // Initialize ApexCharts for main chart
         let mainChartOptions = {
             series: [{
-                name: 'AAPL',
+                name: stockSymbol,
                 data: ohlc
             }],
             chart: {
@@ -489,7 +492,7 @@
                 }
             },
             title: {
-                text: 'AAPL Stock Price',
+                text: stockSymbol + ' Stock Price',
                 align: 'left'
             },
             xaxis: {
@@ -631,7 +634,7 @@
                         type: 'candlestick'
                     },
                     series: [{
-                        name: 'AAPL',
+                        name: stockSymbol,
                         data: ohlc
                     }]
                 });
@@ -641,7 +644,7 @@
                         type: 'line'
                     },
                     series: [{
-                        name: 'AAPL',
+                        name: stockSymbol,
                         data: lineData.map((value, index) => ({
                             x: new Date(dates[index]).getTime(),
                             y: value

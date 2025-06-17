@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.ta4j.core.BarSeries;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 @Service
 public class AnalysisService {
@@ -23,6 +25,8 @@ public class AnalysisService {
     
     @Autowired
     private StockAnalysisRepository stockAnalysisRepository;
+    
+    private final Random random = new Random();
     
     public StockAnalysis createAnalysis(String symbol, User analyst) throws IOException, InterruptedException {
         Stock stock = marketService.findOrCreateStock(symbol);
@@ -74,5 +78,22 @@ public class AnalysisService {
     
     public List<StockAnalysis> getAnalysesByStockAndInvestor(Long stockId, Long investorId) {
         return stockAnalysisRepository.findByStockIdAndInvestorId(stockId, investorId);
+    }
+    
+    // For demo purposes, get stock name based on symbol
+    public String getStockName(String symbol) {
+        Map<String, String> stockNames = new HashMap<>();
+        stockNames.put("AAPL", "Apple Inc.");
+        stockNames.put("MSFT", "Microsoft Corporation");
+        stockNames.put("GOOGL", "Alphabet Inc.");
+        stockNames.put("AMZN", "Amazon.com Inc.");
+        stockNames.put("META", "Meta Platforms Inc.");
+        stockNames.put("TSLA", "Tesla Inc.");
+        stockNames.put("NVDA", "NVIDIA Corporation");
+        stockNames.put("JPM", "JPMorgan Chase & Co.");
+        stockNames.put("V", "Visa Inc.");
+        stockNames.put("JNJ", "Johnson & Johnson");
+        
+        return stockNames.getOrDefault(symbol, symbol + " Inc.");
     }
 }
