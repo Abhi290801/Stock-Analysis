@@ -1,0 +1,24 @@
+version: 1
+applications:
+  - frontend:
+      phases:
+        build:
+          commands:
+            - echo "Nothing to build for frontend"
+    appRoot: src/main/resources/static
+  - backend:
+      phases:
+        build:
+          commands:
+            - echo "Building Spring Boot application"
+            - mvn clean package -DskipTests
+        post_build:
+          commands:
+            - echo "Completed building Spring Boot application"
+      artifacts:
+        baseDirectory: target
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - '/root/.m2/**/*'

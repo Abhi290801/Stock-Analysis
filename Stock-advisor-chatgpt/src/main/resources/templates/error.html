@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error - Stock Advisor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .error-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            max-width: 600px;
+            text-align: center;
+        }
+        .error-icon {
+            font-size: 60px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .error-details {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <h1>Oops! Something went wrong</h1>
+        <p>We're sorry, but an error occurred while processing your request.</p>
+        
+        <div class="error-details">
+            <p><strong>Date:</strong> <span th:text="${timestamp}">2025-06-18</span></p>
+            <p><strong>Status:</strong> <span th:text="${status}">500</span></p>
+            <p><strong>Error:</strong> <span th:text="${error}">Internal Server Error</span></p>
+            <p><strong>Message:</strong> <span th:text="${message}">Error message</span></p>
+            <p><strong>Path:</strong> <span th:text="${path}">/path</span></p>
+        </div>
+        
+        <a href="/dashboard" class="btn">Return to Dashboard</a>
+    </div>
+</body>
+</html>
