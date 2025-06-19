@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Stock Analyses - Stock Advisor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f7fa;
+            color: #333;
+        }
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #3498db;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .page-title {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 25px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 18px 25px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: 600;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .card-body {
+            padding: 25px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .badge-buy {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .badge-sell {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .badge-hold {
+            background-color: #f39c12;
+            color: white;
+        }
+        .btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/dashboard" class="navbar-brand">Stock Advisor</a>
+        <div class="navbar-nav">
+            <a href="/investor/portfolio" class="nav-link">Portfolio</a>
+            <a href="/investor/analyses" class="nav-link">Analyses</a>
+            <form th:action="@{/logout}" method="post" style="display: inline;">
+                <button type="submit" class="nav-link" style="background: none; border: none; cursor: pointer;">Logout</button>
+            </form>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">Stock Analyses</h1>
+        
+        <div class="card">
+            <div class="card-header">Recent Recommendations</div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock</th>
+                            <th>Analyst</th>
+                            <th>Current Price</th>
+                            <th>Recommendation</th>
+                            <th>Portfolio %</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:if="${analyses == null or analyses.empty}">
+                            <td colspan="7" style="text-align: center; color: #7f8c8d;">
+                                No analyses available. Your assigned analyst will provide recommendations here.
+                            </td>
+                        </tr>
+                        <tr th:each="analysis : ${analyses}">
+                            <td th:text="${#temporals.format(analysis.createdAt, 'yyyy-MM-dd HH:mm')}">2025-06-17 14:30</td>
+                            <td th:text="${analysis.stock.symbol}">AAPL</td>
+                            <td th:text="${analysis.analyst.fullName}">John Analyst</td>
+                            <td th:text="${'$' + #numbers.formatDecimal(analysis.currentPrice, 1, 2)}">$175.23</td>
+                            <td>
+                                <span th:class="${'badge badge-' + (#strings.toLowerCase(analysis.recommendation) == 'buy' ? 'buy' : (#strings.toLowerCase(analysis.recommendation) == 'sell' ? 'sell' : 'hold'))}"
+                                      th:text="${analysis.recommendation}">BUY</span>
+                            </td>
+                            <td th:text="${analysis.portfolioPercentage + '%'}">15%</td>
+                            <td>
+                                <a th:href="@{'/investor/analysis/' + ${analysis.id}}" class="btn">View Details</a>
+                            </td>
+                        </tr>
+                        <!-- Sample data for demonstration -->
+                        <tr>
+                            <td>2025-06-17 14:30</td>
+                            <td>AAPL</td>
+                            <td>John Analyst</td>
+                            <td>$175.23</td>
+                            <td><span class="badge badge-buy">BUY</span></td>
+                            <td>15%</td>
+                            <td><a href="#" class="btn">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>2025-06-16 11:45</td>
+                            <td>MSFT</td>
+                            <td>John Analyst</td>
+                            <td>$412.67</td>
+                            <td><span class="badge badge-buy">BUY</span></td>
+                            <td>20%</td>
+                            <td><a href="#" class="btn">View Details</a></td>
+                        </tr>
+                        <tr>
+                            <td>2025-06-15 09:20</td>
+                            <td>GOOGL</td>
+                            <td>John Analyst</td>
+                            <td>$178.45</td>
+                            <td><span class="badge badge-hold">HOLD</span></td>
+                            <td>10%</td>
+                            <td><a href="#" class="btn">View Details</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

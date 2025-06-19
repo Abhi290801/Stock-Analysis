@@ -7,6 +7,7 @@
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/repository/StockAnalysisRepository.java
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/model/User.java
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/controller/DashboardController.java
+/home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/controller/CustomErrorController.java
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/controller/AuthController.java
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/service/ChatGPTService.java
 /home/abhishek/Project/Stock-advisor-chatgpt/src/main/java/com/example/stockadvisor/model/Portfolio.java

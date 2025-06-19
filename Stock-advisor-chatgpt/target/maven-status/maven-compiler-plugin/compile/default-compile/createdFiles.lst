@@ -1,3 +1,4 @@
+com/example/stockadvisor/controller/CustomErrorController.class
 com/example/stockadvisor/model/Portfolio.class
 com/example/stockadvisor/service/UserService.class
 com/example/stockadvisor/repository/StockRepository.class
